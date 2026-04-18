@@ -21,6 +21,16 @@
 > first flash, `ARDUINO_USB_CDC_ON_BOOT=1` usually lets subsequent uploads
 > reset into download mode automatically.
 
+### Running on a StickS3
+
+<p align="center">
+  <img src="docs/s3/approval.jpg" alt="Approval prompt for a Bash command on M5StickS3" width="240">
+  <img src="docs/s3/pet-stats.jpg" alt="Pet stats page showing mood, fed, energy, level and token counters" width="240">
+  <img src="docs/s3/credits.jpg" alt="Credits page showing hardware line M5StickC Plus S3 / ESP32-S3 + BMI270" width="240">
+</p>
+
+Left: live approval prompt (`Bash` tool waiting on `git config user.name; git config user.email`). Middle: pet stats page after a few approvals. Right: Info → Credits page identifying the hardware as StickS3.
+
 ---
 
 Claude for macOS and Windows can connect Claude Cowork and Claude Code to
