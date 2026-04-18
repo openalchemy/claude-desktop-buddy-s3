@@ -1,4 +1,27 @@
-# claude-desktop-buddy
+# claude-desktop-buddy (M5StickC Plus **S3** port)
+
+> **Unofficial fork.** This branch ports the upstream firmware from the
+> original M5StickC Plus (ESP32) to the newer **M5StickC Plus S3** (ESP32-S3).
+> Upstream explicitly does not accept board-port PRs — see
+> [CONTRIBUTING.md](CONTRIBUTING.md). For the protocol reference and the
+> original M5StickC Plus support, see [anthropics/claude-desktop-buddy](https://github.com/anthropics/claude-desktop-buddy).
+>
+> **What changed for the S3:**
+> - `platformio.ini` targets `esp32-s3-devkitc-1` with `M5Unified` (not `M5StickCPlus`)
+> - New `src/m5_compat.h` shim maps the old `M5.Axp.*`/`M5.Beep.*`/`M5.Imu.*`/`M5.Rtc.*` APIs onto the M5Unified equivalents
+> - RTC struct field names switched to lowercase (`.hours`, `.month`, `.weekDay`)
+> - Power button handled via `M5.BtnPWR.wasClicked()` instead of `M5.Axp.GetBtnPress()`
+> - LED moved from G10 → **G19**
+> - `src/data.h` no longer reads from USB `Serial` — on ESP32-S3 with native USB CDC, `Serial.available()` can deadlock `dataPoll` when no host is actively draining. BLE is the only data channel on S3.
+>
+> **Flashing an S3 for the first time:**
+> StickS3 has no GPIO-0 boot button. To enter download mode: plug in USB,
+> then **long-press the side power button until the green LED flashes**
+> (3-5 seconds). Only then will `pio run -t upload` succeed. After the
+> first flash, `ARDUINO_USB_CDC_ON_BOOT=1` usually lets subsequent uploads
+> reset into download mode automatically.
+
+---
 
 Claude for macOS and Windows can connect Claude Cowork and Claude Code to
 maker devices over BLE, so developers and makers can build hardware that
