@@ -411,10 +411,13 @@ static const char* const DOW[] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
 static uint8_t clockDow() { return _clkDt.weekDay % 7; }
 static void drawClock() {
   const Palette& p = characterPalette();
-  char hm[6]; snprintf(hm, sizeof(hm), "%02u:%02u", _clkTm.hours, _clkTm.minutes);
-  char ss[4]; snprintf(ss, sizeof(ss), ":%02u", _clkTm.seconds);
+  // hours/minutes/seconds/date are int8_t (M5Unified's RTC sentinel for
+  // "unset" is -1) — format with %d, not %u, so a bad read shows as a
+  // legible "-1" instead of a sign-extended 4294967295.
+  char hm[6]; snprintf(hm, sizeof(hm), "%02d:%02d", _clkTm.hours, _clkTm.minutes);
+  char ss[4]; snprintf(ss, sizeof(ss), ":%02d", _clkTm.seconds);
   uint8_t mi = (_clkDt.month >= 1 && _clkDt.month <= 12) ? _clkDt.month - 1 : 0;
-  char dl[8]; snprintf(dl, sizeof(dl), "%s %02u", MON[mi], _clkDt.date);
+  char dl[8]; snprintf(dl, sizeof(dl), "%s %02d", MON[mi], _clkDt.date);
 
   if (clockOrient == 0) {
     paintedOrient = 0;
@@ -441,8 +444,8 @@ static void drawClock() {
   // for nothing. Gate on the second changing (or full repaint).
   if (repaint || _clkTm.seconds != lastSec) {
     lastSec = _clkTm.seconds;
-    char wdl[12]; snprintf(wdl, sizeof(wdl), "%s %s %02u", DOW[clockDow()], MON[mi], _clkDt.date);
-    char ssl[3]; snprintf(ssl, sizeof(ssl), "%02u", _clkTm.seconds);
+    char wdl[12]; snprintf(wdl, sizeof(wdl), "%s %s %02d", DOW[clockDow()], MON[mi], _clkDt.date);
+    char ssl[3]; snprintf(ssl, sizeof(ssl), "%02d", _clkTm.seconds);
     M5.Lcd.setTextDatum(MC_DATUM);
     M5.Lcd.setTextSize(3); M5.Lcd.setTextColor(p.text, p.bg);    M5.Lcd.drawString(hm, 170, 42);
     M5.Lcd.setTextSize(2); M5.Lcd.setTextColor(p.textDim, p.bg); M5.Lcd.drawString(ssl, 170, 72);

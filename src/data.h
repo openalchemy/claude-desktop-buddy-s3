@@ -87,7 +87,7 @@ static void _applyJson(const char* line, TamaState* out) {
     M5.Rtc.setDate(&dt);
     extern uint32_t _clkLastRead;
     _clkLastRead = 0;   // force re-read so _clkDt and _rtcValid agree
-    _rtcValid = true;
+    _rtcValid = M5.Rtc.isEnabled();
     _lastLiveMs = millis();
     return;
   }
